@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "499840188255",
+    "project_id": "fastrends-d3b73",
+    "storage_bucket": "fastrends-d3b73.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499840188255:android:9774bf5c3364c3ca6240ea",
+        "android_client_info": {
+          "package_name": "com.fastrends.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiwFBjPo6Oe4XsqULL_bA7JhCF2NQCJM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
