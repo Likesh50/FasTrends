@@ -1,6 +1,6 @@
 //import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:fastrends/Splashscreen.dart';
-import 'package:fastrends/firebase_options.dart';
+import 'package:fastrends/Other_Page/Splashscreen.dart';
+import 'package:fastrends/Main_Pages/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 //import 'package:loading_animation_widget/loading_animation_widget.dart';

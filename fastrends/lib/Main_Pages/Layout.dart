@@ -1,3 +1,5 @@
+import 'package:fastrends/Authentication/loginpage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MainLayout extends StatelessWidget {
@@ -12,6 +14,21 @@ class MainLayout extends StatelessWidget {
     required this.currentIndex,
     this.title = 'App Title',
   });
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Navigate to the LoginPage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                LoginPage()), // Replace LoginPage() with your actual login page widget
+      );
+    } catch (e) {
+      print('Sign out error: $e');
+      // Optionally show an error snackbar or dialog
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +51,11 @@ class MainLayout extends StatelessWidget {
             backgroundImage: NetworkImage(
                 'https://via.placeholder.com/150'), // Replace with your profile photo URL
           ),
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () => _signOut(context),
+          ),
+          SizedBox(width: 16),
           SizedBox(width: 16),
         ],
       ),
@@ -77,8 +99,8 @@ class AppBottomNavigationBar extends StatelessWidget {
           label: 'Franchise',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.article),
-          label: 'News Summary',
+          icon: Icon(Icons.event),
+          label: 'Events',
         ),
       ],
       selectedItemColor: Colors.blue,

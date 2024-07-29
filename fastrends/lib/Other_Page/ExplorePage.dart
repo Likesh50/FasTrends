@@ -1,4 +1,4 @@
-import 'package:fastrends/Layout.dart';
+import 'package:fastrends/Main_Pages/Layout.dart';
 import 'package:flutter/material.dart';
 
 class ExplorePage extends StatelessWidget {

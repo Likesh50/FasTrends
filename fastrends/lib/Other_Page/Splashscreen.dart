@@ -1,4 +1,5 @@
-import 'package:fastrends/MainPage.dart';
+import 'package:fastrends/Authentication/Auth.dart';
+import 'package:fastrends/Main_Pages/MainPage.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -12,7 +13,7 @@ class SplashScreen extends StatelessWidget {
           splash: 'assets/images/Logo.png',
           splashIconSize: double.infinity,
           duration: 3000,
-          nextScreen: MainApp(),
+          nextScreen: AuthPage(),
           backgroundColor: Colors.blue,
           splashTransition: SplashTransition.scaleTransition,
         ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fastrends/Layout.dart';
+import 'package:fastrends/Main_Pages/Layout.dart';
 
 class CommunityPage extends StatelessWidget {
   final Function(int) onItemTapped;
