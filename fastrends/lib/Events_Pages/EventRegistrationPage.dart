@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastrends/Main_Pages/Layout.dart';
+import 'package:fastrends/Main_Pages/MainPage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -32,6 +35,15 @@ class EventRegistrationContent extends StatefulWidget {
 class _EventRegistrationContentState extends State<EventRegistrationContent> {
   final _formKey = GlobalKey<FormState>();
   File? _image;
+  final _eventTitleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _eventTypeController = TextEditingController();
+  final _eventLinkController = TextEditingController();
+  final _startDateTimeController = TextEditingController();
+  final _endDateTimeController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _speakerController = TextEditingController();
+  final _organisationController = TextEditingController();
 
   Future<void> _pickImage() async {
     final pickedFile =
@@ -40,6 +52,94 @@ class _EventRegistrationContentState extends State<EventRegistrationContent> {
       setState(() {
         _image = File(pickedFile.path);
       });
+    }
+  }
+
+  Future<String?> _uploadImage(File imageFile) async {
+    try {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('event_images')
+          .child('${DateTime.now().toIso8601String()}.jpg');
+      await storageRef.putFile(imageFile);
+      final imageUrl = await storageRef.getDownloadURL();
+      return imageUrl;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
+    }
+  }
+
+  Future<void> _selectDateAndTime(TextEditingController controller) async {
+    DateTime now = DateTime.now();
+    DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: DateTime(now.year - 1),
+      lastDate: DateTime(now.year + 1),
+    );
+
+    if (selectedDate != null) {
+      TimeOfDay? selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(now),
+      );
+
+      if (selectedTime != null) {
+        final dateTime = DateTime(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
+        setState(() {
+          controller.text = dateTime.toLocal().toString();
+        });
+      }
+    }
+  }
+
+  Future<void> _submitForm() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      String? imageUrl;
+      if (_image != null) {
+        imageUrl = await _uploadImage(_image!);
+      }
+
+      final eventData = {
+        'title': _eventTitleController.text,
+        'description': _descriptionController.text,
+        'event_type': _eventTypeController.text,
+        'event_link': _eventLinkController.text,
+        'start_date_time': _startDateTimeController.text,
+        'end_date_time': _endDateTimeController.text,
+        'location': _locationController.text,
+        'speaker': _speakerController.text,
+        'organisation': _organisationController.text,
+        'image_url': imageUrl ?? '',
+      };
+
+      try {
+        await FirebaseFirestore.instance.collection('events').add(eventData);
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Event registered successfully!')));
+        _formKey.currentState?.reset();
+        setState(() {
+          _image = null;
+        });
+      } catch (e) {
+        print('Error storing event data: $e');
+      }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainApp(
+            initialIndex: 4,
+          ),
+        ),
+      );
     }
   }
 
@@ -61,16 +161,38 @@ class _EventRegistrationContentState extends State<EventRegistrationContent> {
               ),
             ),
             SizedBox(height: 16.0),
-            _buildTextField('Event Title', 'Enter event title'),
+            _buildTextField('Event Title', 'Enter event title',
+                controller: _eventTitleController),
             _buildTextField('Description', 'Enter a brief description',
-                maxLines: 3),
-            _buildTextField('Event Type', 'Enter event type (Free/Paid)'),
+                controller: _descriptionController, maxLines: 3),
+            _buildTextField('Event Type', 'Enter event type (Free/Paid)',
+                controller: _eventTypeController),
             _buildTextField('Event Link', 'Enter event link',
+                controller: _eventLinkController,
                 keyboardType: TextInputType.url),
-            _buildTextField('Date and Time', 'Enter date and time'),
-            _buildTextField('Location', 'Enter event location'),
-            _buildTextField('Speaker', 'Enter speaker name'),
-            _buildTextField('Organisation', 'Enter organisation name'),
+            GestureDetector(
+              onTap: () => _selectDateAndTime(_startDateTimeController),
+              child: AbsorbPointer(
+                child: _buildTextField(
+                    'Start Date and Time', 'Select start date and time',
+                    controller: _startDateTimeController),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            GestureDetector(
+              onTap: () => _selectDateAndTime(_endDateTimeController),
+              child: AbsorbPointer(
+                child: _buildTextField(
+                    'End Date and Time', 'Select end date and time',
+                    controller: _endDateTimeController),
+              ),
+            ),
+            _buildTextField('Location', 'Enter event location',
+                controller: _locationController),
+            _buildTextField('Speaker', 'Enter speaker name',
+                controller: _speakerController),
+            _buildTextField('Organisation', 'Enter organisation name',
+                controller: _organisationController),
             SizedBox(height: 16.0),
             _image == null
                 ? TextButton.icon(
@@ -91,11 +213,7 @@ class _EventRegistrationContentState extends State<EventRegistrationContent> {
             SizedBox(height: 16.0),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    // Process the form data
-                  }
-                },
+                onPressed: _submitForm,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,
                   padding:
@@ -121,10 +239,13 @@ class _EventRegistrationContentState extends State<EventRegistrationContent> {
   }
 
   Widget _buildTextField(String label, String hint,
-      {int maxLines = 1, TextInputType keyboardType = TextInputType.text}) {
+      {int maxLines = 1,
+      TextInputType keyboardType = TextInputType.text,
+      required TextEditingController controller}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
+        controller: controller,
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,

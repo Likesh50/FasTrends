@@ -5,8 +5,10 @@ class EventDetailPage extends StatelessWidget {
   final String title;
   final bool isPaid;
   final String link;
-  final String date;
-  final String time;
+  final String startDate;
+  final String startTime;
+  final String endDate;
+  final String endTime;
   final String location;
   final String speaker;
   final String organization;
@@ -16,8 +18,10 @@ class EventDetailPage extends StatelessWidget {
     required this.title,
     required this.isPaid,
     required this.link,
-    required this.date,
-    required this.time,
+    required this.startDate,
+    required this.startTime,
+    required this.endDate,
+    required this.endTime,
     required this.location,
     required this.speaker,
     required this.organization,
@@ -34,13 +38,15 @@ class EventDetailPage extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
                 imageUrl,
                 fit: BoxFit.cover,
+                width: double.infinity,
+                height: 200,
               ),
             ),
             SizedBox(height: 20),
@@ -74,8 +80,10 @@ class EventDetailPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
-            _buildDetailRow(Icons.date_range, 'Date:', date),
-            _buildDetailRow(Icons.access_time, 'Time:', time),
+            _buildDetailRow(Icons.date_range, 'Start Date:', startDate),
+            _buildDetailRow(Icons.access_time, 'Start Time:', startTime),
+            _buildDetailRow(Icons.date_range, 'End Date:', endDate),
+            _buildDetailRow(Icons.access_time, 'End Time:', endTime),
             _buildDetailRow(Icons.location_on, 'Location:', location),
             _buildDetailRow(Icons.person, 'Speaker:', speaker),
             _buildDetailRow(Icons.business, 'Organization:', organization),
@@ -87,7 +95,7 @@ class EventDetailPage extends StatelessWidget {
 
   Widget _buildDetailRow(IconData icon, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 140.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
           Icon(icon, color: Colors.blueAccent),
