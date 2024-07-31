@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class MyHomePage extends StatelessWidget {
   final Function(int) onItemTapped;
   final int currentIndex;
-
-  MyHomePage({required this.onItemTapped, required this.currentIndex});
+  final String role;
+  MyHomePage(
+      {required this.onItemTapped, required this.currentIndex, this.role = ""});
 
   @override
   Widget build(BuildContext context) {
+    print('User Role: $role');
     return MainLayout(
       body: HomeContent(),
       title: 'Home',

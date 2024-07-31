@@ -48,13 +48,14 @@ class AuthPage extends StatelessWidget {
 
           // Assume 'role' field exists and contains the role of the user
           final userRole = userData['role'] ?? 'unknown';
-
           if (userRole == 'entrepreneur') {
-            // Navigate to the Entrepreneur's home page
-            return MainApp(); // Replace with Entrepreneur's home page if different
+            return MainApp(
+                role:
+                    'Entrepreneurs'); // Replace with Entrepreneur's home page if different
           } else {
             // Handle other roles or default case
-            return MainApp(); // Replace with the appropriate page
+            return MainApp(
+                role: 'Investors'); // Replace with the appropriate page
           }
         } else {
           // User data does not exist in Firestore, handle accordingly
