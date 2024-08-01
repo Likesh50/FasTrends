@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fastrends/Events_Pages/EventDetailPage.dart';
 import 'package:fastrends/Events_Pages/EventRegistrationPage.dart';
 import 'package:fastrends/Main_Pages/Layout.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart'; // Import this for the updated url_launcher functions
+import 'package:url_launcher/url_launcher.dart';
 
 class EventListingPage extends StatelessWidget {
   final Function(int) onItemTapped;
@@ -26,7 +27,9 @@ class EventListingPage extends StatelessWidget {
             Expanded(child: EventList()),
             SizedBox(height: 10),
             HostEventButton(
-                onItemTapped: onItemTapped, currentIndex: currentIndex),
+              onItemTapped: onItemTapped,
+              currentIndex: currentIndex,
+            ),
           ],
         ),
       ),
@@ -35,35 +38,52 @@ class EventListingPage extends StatelessWidget {
 }
 
 class EventList extends StatelessWidget {
+  String _formatDateTime(String dateTimeStr) {
+    final dateTime = DateTime.parse(dateTimeStr);
+    return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
+  }
+
+  String _formatTime(String dateTimeStr) {
+    final dateTime = DateTime.parse(dateTimeStr);
+    return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        EventCard(
-          title: 'Tech Conference 2024',
-          description:
-              'A leading tech conference with industry experts sharing insights on the latest trends in technology.',
-          eventType: 'Paid',
-          eventLink: 'https://example.com/techconference2024',
-          dateTime: 'August 10, 2024, 10:00 AM',
-          location: 'San Francisco, CA',
-          speaker: 'John Doe',
-          organisation: 'Tech World',
-          imageUrl: 'https://example.com/images/tech_conference.jpg',
-        ),
-        EventCard(
-          title: 'Business Summit 2024',
-          description:
-              'Join us for a business summit where top leaders discuss strategies for growth and success.',
-          eventType: 'Non-Paid',
-          eventLink: 'https://example.com/businesssummit2024',
-          dateTime: 'September 5, 2024, 9:00 AM',
-          location: 'New York, NY',
-          speaker: 'Jane Smith',
-          organisation: 'Business Inc.',
-          imageUrl: 'https://example.com/images/business_summit.jpg',
-        ),
-      ],
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('events').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        final events = snapshot.data?.docs ?? [];
+        return ListView.builder(
+          itemCount: events.length,
+          itemBuilder: (context, index) {
+            final event = events[index];
+            final startDateTime = event['start_date_time'];
+            final endDateTime = event['end_date_time'];
+
+            return EventCard(
+              title: event['title'],
+              description: event['description'],
+              eventType: event['event_type'],
+              eventLink: event['event_link'],
+              startDate: _formatDateTime(startDateTime),
+              startTime: _formatTime(startDateTime),
+              endDate: _formatDateTime(endDateTime),
+              endTime: _formatTime(endDateTime),
+              location: event['location'],
+              speaker: event['speaker'],
+              organisation: event['organisation'],
+              imageUrl: event['image_url'],
+            );
+          },
+        );
+      },
     );
   }
 }
@@ -73,7 +93,10 @@ class EventCard extends StatelessWidget {
   final String description;
   final String eventType;
   final String eventLink;
-  final String dateTime;
+  final String startDate;
+  final String startTime;
+  final String endDate;
+  final String endTime;
   final String location;
   final String speaker;
   final String organisation;
@@ -84,7 +107,10 @@ class EventCard extends StatelessWidget {
     required this.description,
     required this.eventType,
     required this.eventLink,
-    required this.dateTime,
+    required this.startDate,
+    required this.startTime,
+    required this.endDate,
+    required this.endTime,
     required this.location,
     required this.speaker,
     required this.organisation,
@@ -124,7 +150,13 @@ class EventCard extends StatelessWidget {
               ),
             ),
             SizedBox(height: 5),
-            Text('Date and Time: $dateTime'),
+            Text('Start Date: $startDate'),
+            SizedBox(height: 5),
+            Text('Start Time: $startTime'),
+            SizedBox(height: 5),
+            Text('End Date: $endDate'),
+            SizedBox(height: 5),
+            Text('End Time: $endTime'),
             SizedBox(height: 5),
             Text('Location: $location'),
             SizedBox(height: 5),
@@ -144,8 +176,10 @@ class EventCard extends StatelessWidget {
                           title: title,
                           isPaid: eventType == 'Paid',
                           link: eventLink,
-                          date: dateTime.split(', ')[0],
-                          time: dateTime.split(', ')[1],
+                          startDate: startDate,
+                          startTime: startTime,
+                          endDate: endDate,
+                          endTime: endTime,
                           location: location,
                           speaker: speaker,
                           organization: organisation,
@@ -183,7 +217,10 @@ class HostEventButton extends StatelessWidget {
   final Function(int) onItemTapped;
   final int currentIndex;
 
-  HostEventButton({required this.onItemTapped, required this.currentIndex});
+  HostEventButton({
+    required this.onItemTapped,
+    required this.currentIndex,
+  });
 
   @override
   Widget build(BuildContext context) {
