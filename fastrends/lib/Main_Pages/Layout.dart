@@ -1,8 +1,11 @@
-import 'package:fastrends/Authentication/loginpage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fastrends/Authentication/loginpage.dart';
+import 'package:fastrends/Other_Page/Profilepage.dart';
 
-class MainLayout extends StatelessWidget {
+class MainLayout extends StatefulWidget {
   final Widget body;
   final Function(int) onItemTapped;
   final String title;
@@ -14,20 +17,47 @@ class MainLayout extends StatelessWidget {
     required this.currentIndex,
     this.title = 'App Title',
   });
+
+  @override
+  _MainLayoutState createState() => _MainLayoutState();
+}
+
+class _MainLayoutState extends State<MainLayout> {
+  Future<String?>? _profileImageFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileImageFuture = _getProfileImage();
+  }
+
   Future<void> _signOut(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
-      // Navigate to the LoginPage
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                LoginPage()), // Replace LoginPage() with your actual login page widget
+        MaterialPageRoute(builder: (context) => LoginPage()),
       );
     } catch (e) {
       print('Sign out error: $e');
       // Optionally show an error snackbar or dialog
     }
+  }
+
+  Future<String?> _getProfileImage() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      print("USER ID is " + user.uid); // Debugging the user ID
+      final doc = await FirebaseFirestore.instance
+          .collection('Entrepreneurs')
+          .doc(user.uid)
+          .get();
+      if (doc.exists) {
+        print("URL: " + (doc.data()?['profile_image'] ?? ''));
+        return doc.data()?['profile_image'];
+      }
+    }
+    return null;
   }
 
   @override
@@ -40,29 +70,49 @@ class MainLayout extends StatelessWidget {
           onPressed: () {},
         ),
         title: Text(
-          title,
+          widget.title,
           style: TextStyle(
             fontSize: 18,
             color: Colors.white, // Set title color to white
           ),
         ),
         actions: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(
-                'https://via.placeholder.com/150'), // Replace with your profile photo URL
+          FutureBuilder<String?>(
+            future: _profileImageFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator(); // or a placeholder
+              } else if (snapshot.hasError) {
+                return Icon(Icons.error); // or handle error accordingly
+              } else {
+                final profileImage = snapshot.data ??
+                    'https://via.placeholder.com/150'; // Default image if null
+                return GestureDetector(
+                  onTap: () {
+                    // Navigate to the ProfilePage
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProfilePage()),
+                    );
+                  },
+                  child: CircleAvatar(
+                    backgroundImage: CachedNetworkImageProvider(profileImage),
+                  ),
+                );
+              }
+            },
           ),
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () => _signOut(context),
           ),
           SizedBox(width: 16),
-          SizedBox(width: 16),
         ],
       ),
-      body: body,
+      body: widget.body,
       bottomNavigationBar: AppBottomNavigationBar(
-        onItemTapped: onItemTapped,
-        currentIndex: currentIndex,
+        onItemTapped: widget.onItemTapped,
+        currentIndex: widget.currentIndex,
       ),
     );
   }
