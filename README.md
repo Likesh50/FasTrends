@@ -97,6 +97,11 @@ FasTrends is an innovative solution designed for entrepreneurs and business prof
     <img src="https://github.com/user-attachments/assets/edfbb368-9955-4b26-897e-2be8cb105c1c" alt="multi lingual" height="400px" >
   </div>
 
+### Tech Stack
+<br><div align="center">
+    ![FasTrends Demo](https://github.com/user-attachments/assets/e2ab9109-28f5-4ee2-b501-fafce118c69e)
+  </div>
+
 ### Demo Video
 
 <br><div align="center">
