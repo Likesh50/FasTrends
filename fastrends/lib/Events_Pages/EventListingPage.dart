@@ -4,7 +4,9 @@ import 'package:fastrends/Events_Pages/EventRegistrationPage.dart';
 import 'package:fastrends/Main_Pages/Layout.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:fastrends/config.dart';
 
+//two language option place
 class EventListingPage extends StatelessWidget {
   final Function(int) onItemTapped;
   final int currentIndex;
@@ -16,8 +18,9 @@ class EventListingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String languageoption = 'ta';
     return MainLayout(
-      title: 'Event Listings',
+      title: Config.events[languageoption]!,
       onItemTapped: onItemTapped,
       currentIndex: currentIndex,
       body: Padding(
@@ -119,6 +122,7 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String languageoption = 'ta';
     return Card(
       margin: EdgeInsets.symmetric(vertical: 10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -139,7 +143,7 @@ class EventCard extends StatelessWidget {
             SizedBox(height: 5),
             Text(description),
             SizedBox(height: 10),
-            Text('Event Type: $eventType'),
+            Text(Config.eventType[languageoption]! + eventType),
             SizedBox(height: 5),
             GestureDetector(
               onTap: () => _launchURL(eventLink),
@@ -150,19 +154,19 @@ class EventCard extends StatelessWidget {
               ),
             ),
             SizedBox(height: 5),
-            Text('Start Date: $startDate'),
+            Text(Config.startDate[languageoption]! + startDate),
             SizedBox(height: 5),
-            Text('Start Time: $startTime'),
+            Text(Config.startTime[languageoption]! + startTime),
             SizedBox(height: 5),
-            Text('End Date: $endDate'),
+            Text(Config.endDate[languageoption]! + endDate),
             SizedBox(height: 5),
-            Text('End Time: $endTime'),
+            Text(Config.endTime[languageoption]! + endTime),
             SizedBox(height: 5),
-            Text('Location: $location'),
+            Text(Config.location[languageoption]! + location),
             SizedBox(height: 5),
-            Text('Speaker: $speaker'),
+            Text("speaker" + speaker),
             SizedBox(height: 5),
-            Text('Organisation: $organisation'),
+            Text(Config.organization[languageoption]! + organisation),
             SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -195,7 +199,7 @@ class EventCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: Text('View Details'),
+                  child: Text(Config.viewDetails[languageoption]!),
                 ),
               ],
             ),
@@ -224,6 +228,7 @@ class HostEventButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String languangeoption = 'ta';
     return ElevatedButton(
       onPressed: () {
         Navigator.push(
@@ -245,7 +250,7 @@ class HostEventButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       ),
       child: Text(
-        'Host Your Event',
+        "Host your event",
         style: TextStyle(fontSize: 16),
       ),
     );

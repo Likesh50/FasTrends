@@ -5,13 +5,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:fastrends/config.dart';
 
 class EntrepreneurRegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final String languageoption = 'ta'; //language option 2 places in this page
     return Scaffold(
       appBar: AppBar(
-        title: Text('Entrepreneur Registration'),
+        title: Text(Config.EntrepreneurRegistration[languageoption]!),
         backgroundColor: Colors.blueAccent,
       ),
       body: EntrepreneurRegistrationContent(),
@@ -108,6 +110,7 @@ class _EntrepreneurRegistrationContentState
 
   @override
   Widget build(BuildContext context) {
+    final String langOption = 'ta';
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Form(
@@ -116,7 +119,7 @@ class _EntrepreneurRegistrationContentState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Register as an Entrepreneur',
+              Config.RegisterAsAnEntrepreneur[langOption]!,
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
@@ -124,20 +127,25 @@ class _EntrepreneurRegistrationContentState
               ),
             ),
             SizedBox(height: 16.0),
-            _buildTextField('Full Name', 'Enter your full name',
+            _buildTextField(Config.fullname[langOption]!,
+                Config.enteryourfullname[langOption]!,
                 controller: _nameController),
-            _buildTextField('Email', 'Enter your email',
+            _buildTextField(
+                Config.email[langOption]!, Config.enteryouremail[langOption]!,
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController),
-            _buildTextField('Phone Number', 'Enter your phone number',
+            _buildTextField(Config.phoneNumber[langOption]!,
+                Config.enteryourphonenumber[langOption]!,
                 keyboardType: TextInputType.phone,
                 controller: _phoneController),
-            _buildTextField('Business Idea', 'Describe your business idea',
+            _buildTextField(Config.BusinessIdea[langOption]!,
+                Config.enteryourbusinessidea[langOption]!,
                 maxLines: 3, controller: _businessIdeaController),
-            _buildTextField(
-                'Business Type', 'Enter business type (e.g., Tech, Health)',
+            _buildTextField(Config.businessType[langOption]!,
+                Config.enterBusinessType[langOption]!,
                 controller: _businessTypeController),
-            _buildTextField('Website (if any)', 'Enter your business website',
+            _buildTextField(Config.website[langOption]!,
+                Config.enterYourBusinessWebsite[langOption]!,
                 keyboardType: TextInputType.url,
                 controller: _websiteController),
             SizedBox(height: 16.0),
@@ -145,7 +153,7 @@ class _EntrepreneurRegistrationContentState
                 ? TextButton.icon(
                     onPressed: _pickImage,
                     icon: Icon(Icons.image),
-                    label: Text('Upload Profile Picture'),
+                    label: Text(Config.uploadProfilePicture[langOption]!),
                   )
                 : Column(
                     children: [
@@ -153,7 +161,7 @@ class _EntrepreneurRegistrationContentState
                       TextButton.icon(
                         onPressed: _pickImage,
                         icon: Icon(Icons.image),
-                        label: Text('Change Image'),
+                        label: Text(Config.changeImage[langOption]!),
                       ),
                     ],
                   ),
@@ -170,7 +178,7 @@ class _EntrepreneurRegistrationContentState
                   ),
                 ),
                 child: Text(
-                  'Submit',
+                  Config.submit[langOption]!,
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,

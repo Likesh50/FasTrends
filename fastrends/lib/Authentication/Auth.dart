@@ -3,12 +3,17 @@ import 'package:fastrends/Main_Pages/MainPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fastrends/config.dart';
 
+//language option one page in this page
 class AuthPage extends StatelessWidget {
   const AuthPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Local variable langoption initialized to 'ta'
+    final String langoption = 'ta';
+
     return Scaffold(
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
@@ -20,7 +25,7 @@ class AuthPage extends StatelessWidget {
           }
           if (snapshot.hasData) {
             // User is authenticated
-            return _checkUserRole(snapshot.data!, context);
+            return _checkUserRole(snapshot.data!, context, langoption);
           } else {
             // User is not authenticated, navigate to login page
             return LoginPage();
@@ -30,11 +35,11 @@ class AuthPage extends StatelessWidget {
     );
   }
 
-  Widget _checkUserRole(User user, BuildContext context) {
+  Widget _checkUserRole(User user, BuildContext context, String langoption) {
     // Stream to check user role in Firestore
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('entrepreneurs') // Ensure this collection is correct
+          .collection('entrepreneurs')
           .doc(user.uid)
           .snapshots(),
       builder: (context, snapshot) {
@@ -62,7 +67,7 @@ class AuthPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('User role not found.'),
+                Text(Config.userRoleNotFound[langoption]!),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
@@ -72,7 +77,7 @@ class AuthPage extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => LoginPage()),
                     );
                   },
-                  child: Text('Log Out'),
+                  child: Text(Config.LogOut[langoption]!),
                 ),
               ],
             ),

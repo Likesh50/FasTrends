@@ -3,6 +3,7 @@ import 'package:fastrends/Other_Page/Splashscreen.dart';
 import 'package:fastrends/Main_Pages/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'config.dart';
 //import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 void main() async {

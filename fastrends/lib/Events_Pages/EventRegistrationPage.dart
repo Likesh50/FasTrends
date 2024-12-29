@@ -5,6 +5,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:fastrends/config.dart';
+//one language option
 
 class EventRegistrationPage extends StatelessWidget {
   final Function(int) onItemTapped;
@@ -122,8 +124,9 @@ class _EventRegistrationContentState extends State<EventRegistrationContent> {
 
       try {
         await FirebaseFirestore.instance.collection('events').add(eventData);
+        final String languageoption = 'ta';
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Event registered successfully!')));
+            SnackBar(content: Text("Event Registered Successfully")));
         _formKey.currentState?.reset();
         setState(() {
           _image = null;

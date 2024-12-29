@@ -24,7 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
     'Spanish',
     'French',
     'German',
-    'Chinese'
+    'Chinese',
   ];
 
   @override

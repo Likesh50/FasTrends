@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:fastrends/config.dart';
+//one language option
 
 class EventDetailPage extends StatelessWidget {
   final String title;
@@ -30,9 +32,10 @@ class EventDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String languageoption = 'ta';
     return Scaffold(
       appBar: AppBar(
-        title: Text('Event Details'),
+        title: Text("Event details"),
         backgroundColor: Colors.blueAccent,
       ),
       body: SingleChildScrollView(

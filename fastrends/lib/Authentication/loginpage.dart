@@ -5,7 +5,9 @@ import 'package:fastrends/Authentication/signuppage.dart';
 import 'package:fastrends/Main_Pages/MainPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fastrends/config.dart';
 
+//one language option
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -50,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final String languageOption = 'ta';
     return Scaffold(
         backgroundColor: Colors.grey[300],
         body: SingleChildScrollView(
@@ -64,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Image(image: AssetImage("assets/images/Logo.png")),
                 Text(
-                  "Welcome back you\'ve been missed!",
+                  Config.welcomebackUserYouveBeenMissed[languageOption]!,
                   style: TextStyle(color: Colors.grey[700], fontSize: 16),
                 ),
                 const SizedBox(
@@ -72,13 +75,13 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 MyTextField(
                   controller: usernameController,
-                  hintText: 'Username',
+                  hintText: Config.username[languageOption]!,
                   obscureText: false,
                 ),
                 const SizedBox(height: 10),
                 MyTextField(
                   controller: passwordController,
-                  hintText: 'Password',
+                  hintText: Config.password[languageOption]!,
                   obscureText: true,
                 ),
                 const SizedBox(height: 10),
@@ -89,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       GestureDetector(
                         child: Text(
-                          "Sign Up Instead",
+                          Config.signupInstead[languageOption]!,
                           style: TextStyle(color: Colors.grey[600]),
                         ),
                         onTap: () {
@@ -102,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                       ),
                       Text(
-                        "Forgot Password?",
+                        Config.forgotpassword[languageOption]!,
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                     ],
@@ -111,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 20),
                 MyButton(
                   onTap: signUserIn,
-                  buttonname: "Sign In",
+                  buttonname: "sign in",
                 ),
                 const SizedBox(
                   height: 50,
@@ -129,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: Text(
-                            "Or Continue With",
+                            Config.orcontinuewith[languageOption]!,
                             style: TextStyle(color: Colors.grey[700]),
                           )),
                       Expanded(
@@ -164,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 30,
                         ),
                         Text(
-                          "Sign In With Google",
+                          Config.signinWithgoogle[languageOption]!,
                           style: TextStyle(fontSize: 16),
                         )
                       ],

@@ -1,17 +1,18 @@
 import 'package:fastrends/Main_Pages/Layout.dart';
 import 'package:flutter/material.dart';
+import 'package:fastrends/config.dart';
 
 class MyHomePage extends StatelessWidget {
   final Function(int) onItemTapped;
   final int currentIndex;
-
+  final String languageoption = 'ta';
   MyHomePage({required this.onItemTapped, required this.currentIndex});
 
   @override
   Widget build(BuildContext context) {
     return MainLayout(
       body: HomeContent(),
-      title: 'Home',
+      title: Config.home[languageoption]!,
       onItemTapped: onItemTapped,
       currentIndex: currentIndex,
     );
@@ -21,12 +22,14 @@ class MyHomePage extends StatelessWidget {
 class HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final String languageoption = 'ta';
     return SingleChildScrollView(
       padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Hello User', style: TextStyle(fontSize: 24)),
+          Text(Config.hellouser[languageoption]!,
+              style: TextStyle(fontSize: 24)),
           SizedBox(height: 16.0),
           GraphAnalytics(),
           SizedBox(height: 16.0),
